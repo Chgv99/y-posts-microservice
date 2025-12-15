@@ -2,6 +2,7 @@ package com.chgvcode.y.posts.model;
 
 import java.time.Instant;
 // import java.util.UUID;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,14 +28,15 @@ public class PostEntity {
     
     private String message;
 
-    // private User author;
+    private UUID authorUuid;
 
     @Column(name = "created_at")
     private Instant createdAt;
 
-    public PostEntity(String message) {
+    public PostEntity(String message, UUID authorUuid) {
         // this.uuid = new UUID();
         this.message = message;
+        this.authorUuid = authorUuid;
         this.createdAt = Instant.now();
     }
 }
