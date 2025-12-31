@@ -1,6 +1,5 @@
 package com.chgvcode.y.posts.controller;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chgvcode.y.posts.dto.CreatePostResponse;
+import com.chgvcode.y.posts.dto.GetPostResponse;
 import com.chgvcode.y.posts.dto.PostRequest;
-import com.chgvcode.y.posts.dto.PostResponse;
-import com.chgvcode.y.posts.model.PostEntity;
 import com.chgvcode.y.posts.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public Page<PostEntity> getPosts(
+    public Page<GetPostResponse> getPosts(
             // @RequestParam Long authorId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -50,8 +49,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostResponse> createPost(@RequestHeader("X-User-Uuid") UUID userUuid, @RequestBody PostRequest request) {
-        PostResponse postResponse = postService.createPost(request.message(), userUuid);
+    public ResponseEntity<CreatePostResponse> createPost(@RequestHeader("X-User-Uuid") UUID userUuid, @RequestBody PostRequest request) {
+        CreatePostResponse postResponse = postService.createPost(request.message(), userUuid);
         return new ResponseEntity<>(postResponse, HttpStatus.CREATED);
     }
     
