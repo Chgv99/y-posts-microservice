@@ -1,12 +1,12 @@
 package com.chgvcode.y.posts.service;
 
-import java.util.List;
 import java.util.UUID;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.chgvcode.y.posts.dto.PostResponse;
 import com.chgvcode.y.posts.model.PostEntity;
 import com.chgvcode.y.posts.repository.PostRepository;
 
@@ -18,9 +18,8 @@ public class PostService implements IPostService {
 
     private final PostRepository postRepository;
 
-    // Needs to map postentity into postresponse
-    public List<PostEntity> getPosts() {
-        return postRepository.findAll();
+    public Page<PostEntity> getPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     public PostResponse createPost(String message, UUID authorUuid) {
