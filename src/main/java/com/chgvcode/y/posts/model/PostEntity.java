@@ -1,7 +1,6 @@
 package com.chgvcode.y.posts.model;
 
 import java.time.Instant;
-// import java.util.UUID;
 import java.util.UUID;
 
 import jakarta.persistence.Column;

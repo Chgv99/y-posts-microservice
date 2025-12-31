@@ -4,5 +4,6 @@ import java.time.Instant;
 
 public record PostResponse(
     String message,
+    String author,
     Instant createdAt
 ) {}
