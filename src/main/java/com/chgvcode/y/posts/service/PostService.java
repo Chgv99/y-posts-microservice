@@ -2,6 +2,7 @@ package com.chgvcode.y.posts.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,8 +32,8 @@ public class PostService implements IPostService {
     public Page<GetPostResponse> getPosts(Pageable pageable) {
         Page<PostEntity> page = postRepository.findAll(pageable);
 
-        List<UUID> userUuids = page.getContent().stream().map(PostEntity::getAuthorUuid).collect(Collectors.toList());
-        List<UserResponse> userResponses = userClient.getUsers(userUuids);
+        Set<UUID> userUuids = page.getContent().stream().map(PostEntity::getAuthorUuid).collect(Collectors.toSet());
+        List<UserResponse> userResponses = userClient.getUsers(List.copyOf(userUuids));
         Map<UUID, UserResponse> userMap = userResponses.stream()
                 .collect(Collectors.toMap(u -> u.uuid(), u -> u));
         List<GetPostResponse> dtos = page.getContent().stream().map(
