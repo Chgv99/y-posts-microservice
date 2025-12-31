@@ -23,8 +23,9 @@ public class PostService implements IPostService {
         return postRepository.findAll();
     }
 
-    public PostEntity createPost(String message, UUID authorUuid) {
+    public PostResponse createPost(String message, UUID authorUuid) {
         PostEntity post = new PostEntity(message, authorUuid);
-        return postRepository.save(post);
+        PostEntity savedPost = postRepository.save(post);
+        return new PostResponse(savedPost.getMessage(), savedPost.getAuthorUuid().toString(), savedPost.getCreatedAt());
     }
 }
