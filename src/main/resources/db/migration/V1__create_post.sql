@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS post (
+    id BIGSERIAL PRIMARY KEY,
+    message VARCHAR(255) NOT NULL,
+    author_uuid UUID NOT NULL, 
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
