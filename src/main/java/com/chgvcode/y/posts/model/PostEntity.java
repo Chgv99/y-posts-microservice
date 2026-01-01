@@ -20,13 +20,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "post")
 public class PostEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // private UUID uuid;
     
     private String message;
 
+    @Column(name = "author_uuid")
     private UUID authorUuid;
 
     @Column(name = "created_at")
