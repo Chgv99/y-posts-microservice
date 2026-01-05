@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,7 +15,7 @@ import com.chgvcode.y.posts.client.UserClient;
 import com.chgvcode.y.posts.client.dto.UserResponse;
 import com.chgvcode.y.posts.dto.CreatePostResponse;
 import com.chgvcode.y.posts.dto.GetPostResponse;
-import com.chgvcode.y.posts.model.PostEntity;
+import com.chgvcode.y.posts.entity.PostEntity;
 import com.chgvcode.y.posts.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;

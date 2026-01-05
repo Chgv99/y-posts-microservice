@@ -1,4 +1,4 @@
-package com.chgvcode.y.posts.model;
+package com.chgvcode.y.posts.entity;
 
 import java.time.Instant;
 import java.util.UUID;
