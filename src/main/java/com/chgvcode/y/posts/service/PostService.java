@@ -11,10 +11,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.chgvcode.y.posts.client.UserClient;
-import com.chgvcode.y.posts.client.dto.UserResponse;
 import com.chgvcode.y.posts.dto.CreatePostResponse;
 import com.chgvcode.y.posts.dto.GetPostResponse;
+import com.chgvcode.y.posts.dto.UserResponse;
 import com.chgvcode.y.posts.entity.PostEntity;
 import com.chgvcode.y.posts.repository.PostRepository;
 
@@ -26,13 +25,13 @@ public class PostService implements IPostService {
 
     private final PostRepository postRepository;
 
-    private final UserClient userClient;
+    private final IUserService userService;
 
     public Page<GetPostResponse> getPosts(Pageable pageable) {
         Page<PostEntity> page = postRepository.findAll(pageable);
 
         Set<UUID> userUuids = page.getContent().stream().map(PostEntity::getAuthorUuid).collect(Collectors.toSet());
-        List<UserResponse> userResponses = userClient.getUsers(List.copyOf(userUuids));
+        List<UserResponse> userResponses = userService.getUsersByUuids(List.copyOf(userUuids)); //userClient.getUsers(List.copyOf(userUuids));
         Map<UUID, UserResponse> userMap = userResponses.stream()
                 .collect(Collectors.toMap(u -> u.uuid(), u -> u));
         List<GetPostResponse> dtos = page.getContent().stream().map(
