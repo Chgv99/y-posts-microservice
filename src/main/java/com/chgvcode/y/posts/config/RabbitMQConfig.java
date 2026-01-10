@@ -17,6 +17,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue userDeletionQueue() {
+        return new Queue("userDeletionQueue");
+    }
+
+    @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }

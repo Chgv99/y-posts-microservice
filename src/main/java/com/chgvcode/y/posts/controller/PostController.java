@@ -57,6 +57,5 @@ public class PostController {
     public ResponseEntity<CreatePostResponse> createPost(@RequestHeader("X-User-Uuid") UUID userUuid, @RequestBody PostRequest request) {
         CreatePostResponse postResponse = postService.createPost(request.message(), userUuid);
         return new ResponseEntity<>(postResponse, HttpStatus.CREATED);
-    }
-    
+    }  
 }

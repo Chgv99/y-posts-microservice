@@ -10,6 +10,7 @@ import com.chgvcode.y.posts.dto.UserResponse;
 import com.chgvcode.y.posts.entity.UserEntity;
 import com.chgvcode.y.posts.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -26,13 +27,13 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponse getUserByUsername(String username) {
-        UserEntity userEntity = userRepository.findByUsername(username);
+        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow();
         return new UserResponse(userEntity.getUuid(), userEntity.getUsername());
     }
 
     @Override
     public UserResponse getUserByUuid(UUID uuid) {
-        UserEntity userEntity = userRepository.findByUuid(uuid);
+        UserEntity userEntity = userRepository.findByUuid(uuid).orElseThrow();
         return new UserResponse(userEntity.getUuid(), userEntity.getUsername());
     }
 
@@ -41,6 +42,13 @@ public class UserService implements IUserService {
         return userRepository.findByUuidIn(uuids).stream().map(user -> {
             return new UserResponse(user.getUuid(), user.getUsername());
         }).toList();
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(UserMessage userMessage) {
+        UserEntity userEntity = userRepository.findByUsername(userMessage.getUsername()).orElseThrow();
+        userRepository.deleteByUsername(userMessage.getUsername());
     }
     
 }

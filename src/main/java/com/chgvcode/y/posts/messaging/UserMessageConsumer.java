@@ -14,8 +14,13 @@ public class UserMessageConsumer {
     private final IUserService userService;
 
     @RabbitListener(queues = "userCreationQueue")
-    public void consumeMessage(UserMessage userMessage) {
+    public void consumeUserCreated(UserMessage userMessage) {
         userService.createUser(userMessage);
+    }
+
+    @RabbitListener(queues = "userDeletionQueue")
+    public void consumeUserDeleted(UserMessage userMessage) {
+        userService.deleteUser(userMessage);
     }
 
 }

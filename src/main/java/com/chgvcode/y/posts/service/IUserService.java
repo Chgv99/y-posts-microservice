@@ -11,4 +11,5 @@ public interface IUserService {
     public UserResponse getUserByUsername(String username);
     public UserResponse getUserByUuid(UUID uuids);
     public List<UserResponse> getUsersByUuids(List<UUID> uuids);
+    public void deleteUser(UserMessage userMessage);
 }
