@@ -25,6 +25,18 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserResponse getUserByUsername(String username) {
+        UserEntity userEntity = userRepository.findByUsername(username);
+        return new UserResponse(userEntity.getUuid(), userEntity.getUsername());
+    }
+
+    @Override
+    public UserResponse getUserByUuid(UUID uuid) {
+        UserEntity userEntity = userRepository.findByUuid(uuid);
+        return new UserResponse(userEntity.getUuid(), userEntity.getUsername());
+    }
+
+    @Override
     public List<UserResponse> getUsersByUuids(List<UUID> uuids) {
         return userRepository.findByUuidIn(uuids).stream().map(user -> {
             return new UserResponse(user.getUuid(), user.getUsername());

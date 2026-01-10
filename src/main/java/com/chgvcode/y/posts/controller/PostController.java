@@ -33,7 +33,8 @@ public class PostController {
 
     @GetMapping
     public Page<GetPostResponse> getPosts(
-            @RequestParam(required = false) UUID author,
+            @RequestParam(required = false) String authorUsername,
+            @RequestParam(required = false) UUID authorUuid,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt,desc") String sort
@@ -44,8 +45,10 @@ public class PostController {
                 size,
                 Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0])
         );
-        if (author != null) {
-            return postService.getPosts(author, pageable);
+        if (authorUsername != null && !authorUsername.isEmpty()) {
+            return postService.getPostsByUsername(authorUsername, pageable);
+        } else if (authorUuid != null) {
+            return postService.getPostsByUuid(authorUuid, pageable);
         }
         return postService.getPosts(pageable);
     }

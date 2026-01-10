@@ -27,7 +27,19 @@ public class PostService implements IPostService {
 
     private final IUserService userService;
 
-    public Page<GetPostResponse> getPosts(UUID authorUuid, Pageable pageable) {
+    public Page<GetPostResponse> getPostsByUsername(String username, Pageable pageable) {
+        UserResponse userResponse = userService.getUserByUsername(username);
+
+        Page<PostEntity> page = postRepository.findByAuthorUuid(userResponse.uuid(), pageable);
+
+        List<GetPostResponse> dtos = page.getContent().stream().map(
+                post -> new GetPostResponse(post.getMessage(), userResponse, post.getCreatedAt()))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, page.getTotalElements());
+    }
+
+    public Page<GetPostResponse> getPostsByUuid(UUID authorUuid, Pageable pageable) {
         Page<PostEntity> page = postRepository.findByAuthorUuid(authorUuid, pageable);
 
         UserResponse userResponse = userService.getUserByUuid(authorUuid);
@@ -43,8 +55,8 @@ public class PostService implements IPostService {
         Page<PostEntity> page = postRepository.findAll(pageable);
 
         Set<UUID> userUuids = page.getContent().stream().map(PostEntity::getAuthorUuid).collect(Collectors.toSet());
-        List<UserResponse> userResponses = userService.getUsersByUuids(List.copyOf(userUuids)); //userClient.getUsers(List.copyOf(userUuids));
-        
+        List<UserResponse> userResponses = userService.getUsersByUuids(List.copyOf(userUuids)); // userClient.getUsers(List.copyOf(userUuids));
+
         Map<UUID, UserResponse> userMap = userResponses.stream()
                 .collect(Collectors.toMap(u -> u.uuid(), u -> u));
         List<GetPostResponse> dtos = page.getContent().stream().map(
