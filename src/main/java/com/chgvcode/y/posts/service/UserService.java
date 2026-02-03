@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.chgvcode.y.posts.dto.UserMessage;
 import com.chgvcode.y.posts.dto.UserResponse;
+import com.chgvcode.y.posts.entity.User;
 import com.chgvcode.y.posts.entity.UserEntity;
 import com.chgvcode.y.posts.repository.UserRepository;
 
@@ -26,28 +27,27 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserResponse getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         UserEntity userEntity = userRepository.findByUsername(username).orElseThrow();
-        return new UserResponse(userEntity.getUuid(), userEntity.getUsername());
+        return new User(userEntity.getId(), userEntity.getUuid(), userEntity.getUsername());
     }
 
     @Override
-    public UserResponse getUserByUuid(UUID uuid) {
+    public User getUserByUuid(UUID uuid) {
         UserEntity userEntity = userRepository.findByUuid(uuid).orElseThrow();
-        return new UserResponse(userEntity.getUuid(), userEntity.getUsername());
+        return new User(userEntity.getId(), userEntity.getUuid(), userEntity.getUsername());
     }
 
     @Override
-    public List<UserResponse> getUsersByUuids(List<UUID> uuids) {
+    public List<User> getUsersByUuids(List<UUID> uuids) {
         return userRepository.findByUuidIn(uuids).stream().map(user -> {
-            return new UserResponse(user.getUuid(), user.getUsername());
+            return new User(user.getId(), user.getUuid(), user.getUsername());
         }).toList();
     }
 
     @Override
     @Transactional
     public void deleteUser(UserMessage userMessage) {
-        UserEntity userEntity = userRepository.findByUsername(userMessage.getUsername()).orElseThrow();
         userRepository.deleteByUsername(userMessage.getUsername());
     }
     

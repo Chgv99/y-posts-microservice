@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 import com.chgvcode.y.posts.dto.UserMessage;
-import com.chgvcode.y.posts.dto.UserResponse;
+import com.chgvcode.y.posts.entity.User;
 
 public interface IUserService {
     public void createUser(UserMessage userMessage);
-    public UserResponse getUserByUsername(String username);
-    public UserResponse getUserByUuid(UUID uuids);
-    public List<UserResponse> getUsersByUuids(List<UUID> uuids);
+    public User getUserByUsername(String username);
+    public User getUserByUuid(UUID uuids);
+    public List<User> getUsersByUuids(List<UUID> uuids);
     public void deleteUser(UserMessage userMessage);
 }

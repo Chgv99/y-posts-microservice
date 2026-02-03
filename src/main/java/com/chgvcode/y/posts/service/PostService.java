@@ -1,8 +1,6 @@
 package com.chgvcode.y.posts.service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -12,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.chgvcode.y.posts.dto.CreatePostResponse;
-import com.chgvcode.y.posts.dto.GetPostResponse;
-import com.chgvcode.y.posts.dto.UserResponse;
+import com.chgvcode.y.posts.entity.Post;
 import com.chgvcode.y.posts.entity.PostEntity;
+import com.chgvcode.y.posts.entity.User;
 import com.chgvcode.y.posts.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,40 +25,40 @@ public class PostService implements IPostService {
 
     private final IUserService userService;
 
-    public Page<GetPostResponse> getPostsByUsername(String username, Pageable pageable) {
-        UserResponse userResponse = userService.getUserByUsername(username);
+    public Page<Post> getPostsByUsername(String username, Pageable pageable) {
+        User user = userService.getUserByUsername(username);
 
-        Page<PostEntity> page = postRepository.findByAuthorUuid(userResponse.uuid(), pageable);
+        Page<PostEntity> page = postRepository.findByAuthorUuid(user.uuid(), pageable);
 
-        List<GetPostResponse> dtos = page.getContent().stream().map(
-                post -> new GetPostResponse(post.getMessage(), userResponse, post.getCreatedAt()))
+        List<Post> dtos = page.getContent().stream().map(
+                postEntity -> new Post(postEntity.getId(), postEntity.getMessage(), user.uuid(), postEntity.getCreatedAt()))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtos, pageable, page.getTotalElements());
     }
 
-    public Page<GetPostResponse> getPostsByUuid(UUID authorUuid, Pageable pageable) {
+    public Page<Post> getPostsByUuid(UUID authorUuid, Pageable pageable) {
         Page<PostEntity> page = postRepository.findByAuthorUuid(authorUuid, pageable);
 
-        UserResponse userResponse = userService.getUserByUuid(authorUuid);
+        User user = userService.getUserByUuid(authorUuid);
 
-        List<GetPostResponse> dtos = page.getContent().stream().map(
-                post -> new GetPostResponse(post.getMessage(), userResponse, post.getCreatedAt()))
+        List<Post> dtos = page.getContent().stream().map(
+                postEntity -> new Post(postEntity.getId(), postEntity.getMessage(), user.uuid(), postEntity.getCreatedAt()))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtos, pageable, page.getTotalElements());
     }
 
-    public Page<GetPostResponse> getPosts(Pageable pageable) {
+    public Page<Post> getPosts(Pageable pageable) {
         Page<PostEntity> page = postRepository.findAll(pageable);
 
-        Set<UUID> userUuids = page.getContent().stream().map(PostEntity::getAuthorUuid).collect(Collectors.toSet());
-        List<UserResponse> userResponses = userService.getUsersByUuids(List.copyOf(userUuids)); // userClient.getUsers(List.copyOf(userUuids));
+        // Set<UUID> userUuids = page.getContent().stream().map(PostEntity::getAuthorUuid).collect(Collectors.toSet());
+        // List<User> users = userService.getUsersByUuids(List.copyOf(userUuids)); // userClient.getUsers(List.copyOf(userUuids));
 
-        Map<UUID, UserResponse> userMap = userResponses.stream()
-                .collect(Collectors.toMap(u -> u.uuid(), u -> u));
-        List<GetPostResponse> dtos = page.getContent().stream().map(
-                post -> new GetPostResponse(post.getMessage(), userMap.get(post.getAuthorUuid()), post.getCreatedAt()))
+        // Map<UUID, User> userMap = users.stream()
+        //         .collect(Collectors.toMap(user -> user.uuid(), user -> user));
+        List<Post> dtos = page.getContent().stream().map(
+                postEntity -> new Post(postEntity.getId(), postEntity.getMessage(), postEntity.getAuthorUuid(), postEntity.getCreatedAt()))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtos, pageable, page.getTotalElements());

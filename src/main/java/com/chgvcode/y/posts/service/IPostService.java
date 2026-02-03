@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.chgvcode.y.posts.dto.CreatePostResponse;
-import com.chgvcode.y.posts.dto.GetPostResponse;
+import com.chgvcode.y.posts.entity.Post;
 
 public interface IPostService {
-    public Page<GetPostResponse> getPostsByUsername(String username, Pageable pageable);
-    public Page<GetPostResponse> getPostsByUuid(UUID authorUuid, Pageable pageable);
-    public Page<GetPostResponse> getPosts(Pageable pageable);
+    public Page<Post> getPostsByUsername(String username, Pageable pageable);
+    public Page<Post> getPostsByUuid(UUID authorUuid, Pageable pageable);
+    public Page<Post> getPosts(Pageable pageable);
     public CreatePostResponse createPost(String message, UUID authorUuid);
 }
